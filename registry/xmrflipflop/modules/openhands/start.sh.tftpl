@@ -19,6 +19,10 @@ if ! command -v git &> /dev/null; then
     echo -e "$${BOLD}ERROR:$${RESET} git is missing.\n\n"
 fi
 
+if ! command -v just &> /dev/null; then
+    echo -e "$${BOLD}ERROR:$${RESET} just is missing.\n\n"
+fi
+
 if ! command -v pm2 &> /dev/null; then
     echo -e "$${BOLD}ERROR:$${RESET} pm2 is missing.\n\n"
 fi
