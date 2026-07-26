@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Convert terraform templated variables to shell variables
+readonly INSTALL_DIR=${_install_dir}
+readonly CHECKOUT_URL=${_checkout_url}
+readonly CHECKOUT_BRANCH=${_checkout_branch}
+readonly PORT=${_ingress_port}
+
+# shellcheck disable=SC2034
+readonly BOLD='\033[0;1m'
+readonly RESET='\033[0m'
+
+echo -e "$${BOLD}Installing OpenHands ...\n\n"
+
+# Preflight checks
+if ! command -v git &> /dev/null; then
+    echo -e "$${BOLD}ERROR:$${RESET} git is missing.\n\n"
+fi
+
+if ! command -v pm2 &> /dev/null; then
+    echo -e "$${BOLD}ERROR:$${RESET} pm2 is missing.\n\n"
+fi
+    
+# Clone repository if it doesn't exist
+if [ ! -d "$${INSTALL_DIR}/.git" ]; then
+    rm -rf $${INSTALL_DIR}
+    echo "Cloning $${CHECKOUT_URL}..."
+    git clone --no-checkout "$${CHECKOUT_URL}" "$${INSTALL_DIR}"
+fi
+
+cd "$${INSTALL_DIR}"
+
+git fetch --depth 1 origin "$${CHECKOUT_BRANCH}"
+git checkout -f -B "$${CHECKOUT_BRANCH}" FETCH_HEAD
+git clean -fdx
+just setup
+
+echo -e "🥳 $${BOLD}Installation complete!\n\n"
+
+echo -e "👷 $${BOLD}Starting/restoring OpenHands in background...\n\n"
+
+# restore saved process list; first boot falls back to prod
+pm2 resurrect || (pm2 start ecosystem.config.js && pm2 save)
+
+
+echo -e "📝 $${BOLD}Check logs with\n$${RESET}\t pm2 logs prod"
