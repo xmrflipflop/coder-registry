@@ -35,12 +35,10 @@ Install the Dracula theme from [OpenVSX](https://open-vsx.org/):
 ```tf
 module "openhands" {
   count    = data.coder_workspace.me.start_count
-  source   = "registry.coder.com/NAMESPACE/openhands/coder"
+  source   = "git::https://github.com/xmrflipflop/coder-registry.git/registry/xmrflipflop/openhands/coder"
   version  = "1.0.0"
   agent_id = coder_agent.main.id
-  extensions = [
-    "dracula-theme.theme-dracula"
-  ]
+  install_dir = "/opt/openhands"
 }
 ```
 
