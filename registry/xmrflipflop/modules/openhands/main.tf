@@ -44,9 +44,9 @@ resource "coder_script" "openhands_up" {
 
   script = templatefile("${path.module}/start.sh.tftpl", {
     _install_dir : var.install_dir,
-    _checkout_url: data.coder_parameter.url.value,
-    _checkout_branch: data.coder_parameter.branch.value,
-    _ingress_port: data.coder_parameter.port.value,
+    _checkout_url : data.coder_parameter.url.value,
+    _checkout_branch : data.coder_parameter.branch.value,
+    _ingress_port : data.coder_parameter.port.value,
   })
 }
 
