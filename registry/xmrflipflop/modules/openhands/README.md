@@ -16,7 +16,6 @@ The simplest usage is:
 module "openhands" {
   count   = data.coder_workspace.me.start_count
   source  = "git::https://github.com/xmrflipflop/coder-registry.git/registry/xmrflipflop/openhands/coder"
-  version = "1.0.0"
 }
 ```
 
@@ -35,10 +34,15 @@ Install the Dracula theme from [OpenVSX](https://open-vsx.org/):
 ```tf
 module "openhands" {
   count    = data.coder_workspace.me.start_count
-  source   = "git::https://github.com/xmrflipflop/coder-registry.git/registry/xmrflipflop/openhands/coder"
-  version  = "1.0.0"
+  source   = "git::https://github.com/xmrflipflop/coder-registry.git/registry/xmrflipflop/openhands/coder?ref=openhands"
   agent_id = coder_agent.main.id
   install_dir = "/opt/openhands"
+  pre_install_script = <<-EOT
+    #!/bin/bash
+    trap 'coder exp sync complete pre-openhands' EXIT
+    coder exp sync want pre-openhands <prior dependency unit>
+    coder exp sync start pre-openhands
+  EOT
 }
 ```
 

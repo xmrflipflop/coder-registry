@@ -13,6 +13,9 @@ locals {
   # A built-in icon like "/icon/code.svg" or a full URL of icon
   # :open_hands:
   icon_url = "/emojis/1f450.png"
+
+  # base64 so arbitrary shell content passes safely through templatefile()
+  encoded_pre_install_script = var.pre_install_script != null ? base64encode(var.pre_install_script) : ""
 }
 
 # Input variables
@@ -33,10 +36,16 @@ variable "order" {
   default     = null
 }
 
+variable "pre_install_script" {
+  type        = string
+  description = "Custom script to run before installing <your-tool>. Useful for dependency ordering between modules (e.g. waiting for git-clone to complete)."
+  default     = null
+}
+
 # Run scripts
 resource "coder_script" "openhands_up" {
   agent_id           = var.agent_id
-  display_name       = "OpenHands Start"
+  display_name       = "OpenHands"
   icon               = local.icon_url
   run_on_start       = true
   start_blocks_login = true
@@ -47,6 +56,7 @@ resource "coder_script" "openhands_up" {
     _checkout_url : data.coder_parameter.url.value,
     _checkout_branch : data.coder_parameter.branch.value,
     _ingress_port : data.coder_parameter.port.value,
+    _pre_install_script = local.encoded_pre_install_script,
   })
 }
 

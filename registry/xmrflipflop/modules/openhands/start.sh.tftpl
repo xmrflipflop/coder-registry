@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+set -o errexit
 set -euo pipefail
 
 # Convert terraform templated variables to shell variables
@@ -7,29 +8,48 @@ readonly INSTALL_DIR=${_install_dir}
 readonly CHECKOUT_URL=${_checkout_url}
 readonly CHECKOUT_BRANCH=${_checkout_branch}
 readonly PORT=${_ingress_port}
+readonly PRE_INSTALL_SCRIPT=${_pre_install_script}
 
 # shellcheck disable=SC2034
 readonly BOLD='\033[0;1m'
 readonly RESET='\033[0m'
+
+# PRE_INSTALL
+MODULE_DIR="/tmp/.coder-modules/openhands"
+mkdir -p "$MODULE_DIR/scripts" "$MODULE_DIR/logs"
+
+if [ -n "$PRE_INSTALL_SCRIPT" ]; then
+  echo -e "$${BOLD}Running pre_install_script..."
+  echo "$PRE_INSTALL_SCRIPT" | base64 -d > "$MODULE_DIR/scripts/pre_install.sh"
+  chmod +x "$MODULE_DIR/scripts/pre_install.sh"
+  if ! "$MODULE_DIR/scripts/pre_install.sh" 2>&1 | tee "$MODULE_DIR/logs/pre_install.log"; then
+    echo -e "$${BOLD}ERROR: pre_install_script failed, see $MODULE_DIR/logs/pre_install.log" >&2
+    exit 1
+  fi
+fi
 
 echo -e "$${BOLD}Installing OpenHands ...\n\n"
 
 # Preflight checks
 if ! command -v git &> /dev/null; then
     echo -e "$${BOLD}ERROR:$${RESET} git is missing.\n\n"
+    exit 1
 fi
 
 if ! command -v just &> /dev/null; then
     echo -e "$${BOLD}ERROR:$${RESET} just is missing.\n\n"
+    exit 1
 fi
 
 if ! command -v pm2 &> /dev/null; then
     echo -e "$${BOLD}ERROR:$${RESET} pm2 is missing.\n\n"
+    exit 1
 fi
     
 # Clone repository if it doesn't exist
 if [ ! -d "$${INSTALL_DIR}/.git" ]; then
-    rm -rf $${INSTALL_DIR}
+    sudo rm -rf $${INSTALL_DIR}
+    sudo install -d -m 0755 -o "$$(id -un)" -g "$$(id -gn)" "$${INSTALL_DIR}"
     echo "Cloning $${CHECKOUT_URL}..."
     git clone --no-checkout "$${CHECKOUT_URL}" "$${INSTALL_DIR}"
 fi
