@@ -68,8 +68,8 @@ echo -e "🥳 $${BOLD}Installation complete!\n\n"
 
 echo -e "👷 $${BOLD}Starting/restoring OpenHands in background...\n\n"
 
-# restore saved process list; first boot falls back to prod
-pm2 resurrect || (pm2 start ecosystem.config.js && pm2 save)
+pm2 delete --silent ecosystem.config.js
+pm2 start ecosystem.config.js
 
 
 echo -e "📝 $${BOLD}Check logs with\n$${RESET}\t pm2 logs prod"
