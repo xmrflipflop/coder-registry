@@ -30,6 +30,8 @@ fi
 
 echo -e "$${BOLD}Installing OpenHands ...\n\n"
 
+echo "PATH=$${PATH}"
+
 # Preflight checks
 if ! command -v git &> /dev/null; then
     echo -e "$${BOLD}ERROR:$${RESET} git is missing.\n\n"
