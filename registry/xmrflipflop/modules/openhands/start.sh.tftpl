@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -o errexit
-set -euox pipefail
+set -euo pipefail
 
 # Convert terraform templated variables to shell variables
 readonly INSTALL_DIR=${_install_dir}
@@ -30,10 +30,8 @@ fi
 
 echo -e "$${BOLD}Installing OpenHands ...\n\n"
 
-# Reload env vars
+# Reload env vars like PATH
 source $HOME/.bash_profile
-
-echo "path=$${PATH}"
 
 # Preflight checks
 if ! command -v git &> /dev/null; then
@@ -54,7 +52,7 @@ fi
 # Clone repository if it doesn't exist
 if [ ! -d "$${INSTALL_DIR}/.git" ]; then
     sudo rm -rf $${INSTALL_DIR}
-    sudo install -d -m 0755 -o "$$(id -un)" -g "$$(id -gn)" "$${INSTALL_DIR}"
+    sudo install -d -m 0755 -o "$(id -un)" -g "$(id -gn)" "$${INSTALL_DIR}"
     echo "Cloning $${CHECKOUT_URL}..."
     git clone --no-checkout "$${CHECKOUT_URL}" "$${INSTALL_DIR}"
 fi
