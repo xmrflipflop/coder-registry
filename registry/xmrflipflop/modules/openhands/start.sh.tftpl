@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -o errexit
-set -euo pipefail
+set -euox pipefail
 
 # Convert terraform templated variables to shell variables
 readonly INSTALL_DIR=${_install_dir}
@@ -32,6 +32,8 @@ echo -e "$${BOLD}Installing OpenHands ...\n\n"
 
 # Reload env vars
 source $HOME/.bashrc
+
+echo "path=$${PATH}"
 
 # Preflight checks
 if ! command -v git &> /dev/null; then
