@@ -14,7 +14,7 @@ The simplest usage is:
 
 ```tf
 module "openhands" {
-  count   = data.coder_workspace.me.start_count
+  count  = data.coder_workspace.me.start_count
   source = "git::https://github.com/xmrflipflop/coder-registry.git//registry/xmrflipflop/modules/openhands"
 }
 ```
@@ -32,10 +32,10 @@ Install with a `pre_install_script` that blocks until prior dependency unit is c
 
 ```tf
 module "openhands" {
-  count    = data.coder_workspace.me.start_count
-  source = "git::https://github.com/xmrflipflop/coder-registry.git//registry/xmrflipflop/modules/openhands"
-  agent_id = coder_agent.main.id
-  install_dir = "/opt/openhands"
+  count              = data.coder_workspace.me.start_count
+  source             = "git::https://github.com/xmrflipflop/coder-registry.git//registry/xmrflipflop/modules/openhands"
+  agent_id           = coder_agent.main.id
+  install_dir        = "/opt/openhands"
   pre_install_script = <<-EOT
     #!/bin/bash
     trap 'coder exp sync complete pre-openhands' EXIT

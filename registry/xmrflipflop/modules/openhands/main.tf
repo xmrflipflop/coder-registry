@@ -120,7 +120,7 @@ data "coder_parameter" "port" {
   display_name = "Application port"
   description  = "The port to run the application on."
   type         = "number"
-  default      = 9999
+  default      = 9000
   mutable      = true
 
   validation {
