@@ -29,7 +29,8 @@ if [ -n "$PRE_INSTALL_SCRIPT" ]; then
 fi
 
 echo -e "$${BOLD}Installing OpenHands ...\n\n"
-
+# Reload env vars
+source $HOME/.bashrc
 echo "PATH=$${PATH}"
 
 # Preflight checks
