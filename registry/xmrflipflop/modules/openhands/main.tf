@@ -70,7 +70,7 @@ resource "coder_script" "openhands_down" {
   script = <<-EOT
     #!/usr/bin/env bash
     # graceful stop so apps get SIGINT before the container dies
-    pm2 kill || true
+      cd "${var.install_dir}" && just serve --production --background --stop || true
   EOT
 }
 
