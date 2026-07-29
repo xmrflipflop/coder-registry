@@ -72,6 +72,7 @@ resource "coder_script" "openhands_down" {
     echo "Stopping OpenHands in ${var.install_dir}"
     # graceful stop so apps get SIGINT before the container dies
       cd "${var.install_dir}" && just serve --production --background --stop || true
+      echo "Done"
   EOT
 }
 
