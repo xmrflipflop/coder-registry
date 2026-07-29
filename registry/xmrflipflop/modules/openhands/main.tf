@@ -117,8 +117,8 @@ data "coder_parameter" "url" {
 
 data "coder_parameter" "port" {
   name         = "port"
-  display_name = "Application port"
-  description  = "The port to run the application on."
+  display_name = "OpenHands port"
+  description  = "The port to run the OpenHands on."
   type         = "number"
   default      = 9000
   mutable      = true
