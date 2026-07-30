@@ -27,6 +27,8 @@ module "openhands" {
 
 ### Example 1
 
+Specify repository `url` and `branch` to fetch OpenHands from
+Specify application `port` number
 Specify install to `install_dir`
 Install with a `pre_install_script` that blocks until prior dependency unit is complete.
 
@@ -35,7 +37,10 @@ module "openhands" {
   count              = data.coder_workspace.me.start_count
   source             = "git::https://github.com/xmrflipflop/coder-registry.git//registry/xmrflipflop/modules/openhands"
   agent_id           = coder_agent.main.id
+  url                = "https://github.com/xmrflipflop/openhands-full-stack.git"
+  branch             = "main"
   install_dir        = "/opt/openhands"
+  port               = 9000
   pre_install_script = <<-EOT
     #!/bin/bash
     trap 'coder exp sync complete pre-openhands' EXIT
