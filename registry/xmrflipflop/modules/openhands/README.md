@@ -35,7 +35,7 @@ Install with a `pre_install_script` that blocks until prior dependency unit is c
 ```tf
 module "openhands" {
   count              = data.coder_workspace.me.start_count
-  source             = "git::https://github.com/xmrflipflop/coder-registry.git//registry/xmrflipflop/modules/openhands?ref=variables"
+  source             = "git::https://github.com/xmrflipflop/coder-registry.git//registry/xmrflipflop/modules/openhands"
   agent_id           = coder_agent.main.id
   git_repository_url = "https://github.com/xmrflipflop/openhands-full-stack.git"
   git_ref            = "main"
