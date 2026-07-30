@@ -36,19 +36,19 @@ variable "order" {
   default     = null
 }
 
-variable "branch" {
+variable "git_ref" {
   type        = string
   description = "The OpenHands Git branch, tag, or commit SHA to install."
   default     = "main"
 }
 
-variable "url" {
+variable "git_repository_url" {
   type        = string
   description = "The OpenHands Git repository URL to install."
   default     = "https://github.com/xmrflipflop/openhands-full-stack.git"
 
   validation {
-    condition     = can(regex("^(https?://|git@)", var.url))
+    condition     = can(regex("^(https?://|git@)", var.git_repository_url))
     error_message = "URL must be a valid Git repository URL beginning with https://, http://, or git@."
   }
 }
@@ -81,8 +81,8 @@ resource "coder_script" "openhands_up" {
 
   script = templatefile("${path.module}/start.sh.tftpl", {
     _install_dir : var.install_dir,
-    _checkout_url : var.url,
-    _checkout_branch : var.branch,
+    _checkout_url : var.git_repository_url,
+    _checkout_branch : var.git_ref,
     _ingress_port : var.port,
     _pre_install_script = local.encoded_pre_install_script,
   })
