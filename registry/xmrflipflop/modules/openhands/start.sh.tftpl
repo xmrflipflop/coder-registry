@@ -79,7 +79,7 @@ ensure_installed just 'uv tool install rust-just'
 # Use nvm to install node/npm (but only if it's missing)
 if ! command -v npm &> /dev/null; then
     ensure_installed nvm 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.6/install.sh | bash'
-    if ! command -v just &> /dev/null; then
+    if ! command -v nvm &> /dev/null; then
         # source to add new `nvm` to PATH
         source "$HOME/.nvm/nvm.sh"
     fi
