@@ -56,7 +56,7 @@ variable "git_repository_url" {
 variable "port" {
   type        = number
   description = "The port on which to run OpenHands."
-  default     = 9000
+  default     = 19990
 
   validation {
     condition     = var.port >= 1024 && var.port <= 49151
