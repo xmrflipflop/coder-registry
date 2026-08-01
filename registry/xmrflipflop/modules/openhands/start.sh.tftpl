@@ -46,8 +46,8 @@ set -euo pipefail
 #   ensure_installed bash-completion '' 'dpkg -s bash-completion'
 ensure_installed() {
     local cmd="$1"
-    local installer="${2:-sudo apt-get install -y $1}"
-    local checker="${3:-command -v $1}"
+    local installer="$${2:-sudo apt-get install -y $1}"
+    local checker="$${3:-command -v $1}"
     if eval "$checker" >/dev/null 2>&1; then
         echo "$cmd is already installed."
         return 0
@@ -91,17 +91,17 @@ ensure_installed pm2 'npm install pm2 -g'
 echo -e "$${BOLD}Installing OpenHands ...\n\n"
 
 # Clone repository if it doesn't exist
-if [ ! -d "$${INSTALL_DIR}/.git" ]; then
-    sudo rm -rf $${INSTALL_DIR}
-    sudo install -d -m 0755 -o "$(id -un)" -g "$(id -gn)" "$${INSTALL_DIR}"
-    echo "Cloning $${CHECKOUT_URL}..."
-    git clone --no-checkout "$${CHECKOUT_URL}" "$${INSTALL_DIR}"
+if [ ! -d "$INSTALL_DIR/.git" ]; then
+    sudo rm -rf "$INSTALL_DIR"
+    sudo install -d -m 0755 -o "$(id -un)" -g "$(id -gn)" "$INSTALL_DIR"
+    echo "Cloning $CHECKOUT_URL..."
+    git clone --no-checkout "$CHECKOUT_URL" "$INSTALL_DIR"
 fi
 
-cd "$${INSTALL_DIR}"
+cd "$INSTALL_DIR"
 
-git fetch --depth 1 origin "$${CHECKOUT_BRANCH}"
-git checkout -f -B "$${CHECKOUT_BRANCH}" FETCH_HEAD
+git fetch --depth 1 origin "$CHECKOUT_BRANCH"
+git checkout -f -B "$CHECKOUT_BRANCH" FETCH_HEAD
 git clean -fdx
 just setup --production
 
