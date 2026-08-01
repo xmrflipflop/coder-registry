@@ -28,27 +28,65 @@ if [ -n "$PRE_INSTALL_SCRIPT" ]; then
   fi
 fi
 
+# Actual launch script
+set -o errexit
+set -euo pipefail
+
+# Ensure a command/package is installed; install it if missing.
+#
+# Usage:
+#   ensure_installed <command> [install_command] [check_command]
+#
+# Defaults: install via `sudo apt install -y <command>`,
+# check via `command -v <command>`. Both strings are run with eval.
+#
+# Examples:
+#   ensure_installed stow
+#   ensure_installed uv 'curl -LsSf https://astral.sh/uv/install.sh | sh'
+#   ensure_installed bash-completion '' 'dpkg -s bash-completion'
+ensure_installed() {
+    local cmd="$1"
+    local installer="${2:-sudo apt-get install -y $1}"
+    local checker="${3:-command -v $1}"
+    if eval "$checker" >/dev/null 2>&1; then
+        echo "$cmd is already installed."
+        return 0
+    fi
+    echo "Installing $cmd..."
+    eval "$installer"
+}
+
+
+echo -e "$${BOLD}Checking Dependencies ...\n\n"
+
+# Reload env vars like PATH if they've been freshly installed
+# hopefully captured here in .bash_profile
+if [ -f "$HOME/.bash_profile" ]; then
+    source "$HOME/.bash_profile"
+fi
+
+ensure_installed git
+
+ensure_installed uv 'curl -LsSf https://astral.sh/uv/install.sh | sh'
+if ! command -v just &> /dev/null; then
+    # source to add new `uv` to PATH
+    source "$HOME/.local/bin/env"
+fi
+
+# uv provides latest version over apt
+ensure_installed just 'uv tool install rust-just'
+
+ensure_installed nvm 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.6/install.sh | bash'
+if ! command -v just &> /dev/null; then
+    # source to add new `nvm` to PATH
+    source "$HOME/.nvm/nvm.sh"
+fi
+ensure_installed node 'nvm install --lts'
+
+ensure_installed pm2 'npm install pm2 -g'
+
 echo -e "$${BOLD}Installing OpenHands ...\n\n"
 
-# Reload env vars like PATH
-source $HOME/.bash_profile
-
-# Preflight checks
-if ! command -v git &> /dev/null; then
-    echo -e "$${BOLD}ERROR:$${RESET} git is missing.\n\n"
-    exit 1
-fi
-
-if ! command -v just &> /dev/null; then
-    echo -e "$${BOLD}ERROR:$${RESET} just is missing.\n\n"
-    exit 1
-fi
-
-if ! command -v pm2 &> /dev/null; then
-    echo -e "$${BOLD}ERROR:$${RESET} pm2 is missing.\n\n"
-    exit 1
-fi
-    
 # Clone repository if it doesn't exist
 if [ ! -d "$${INSTALL_DIR}/.git" ]; then
     sudo rm -rf $${INSTALL_DIR}
