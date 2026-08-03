@@ -29,6 +29,7 @@ module "openhands" {
 
 Specify repository `git_repository_url` and `git_ref` to fetch OpenHands from
 Specify application `port` number
+Specify `workspace_dir` to store conversations
 Specify install to `install_dir`
 Install with a `pre_install_script` that blocks until prior dependency unit is complete.
 
@@ -39,6 +40,7 @@ module "openhands" {
   agent_id           = coder_agent.main.id
   git_repository_url = "https://github.com/xmrflipflop/openhands-full-stack.git"
   git_ref            = "main"
+  workspace_dir      = "~/oh_workspace"
   install_dir        = "/opt/openhands"
   port               = 9000
   pre_install_script = <<-EOT

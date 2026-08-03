@@ -42,6 +42,12 @@ variable "git_ref" {
   default     = "main"
 }
 
+variable "workspace_dir" {
+  type        = string
+  description = "The OpenHands workspace dir for storing conversations, ideally persisted."
+  default     = "~/.oh_workspace"
+}
+
 variable "git_repository_url" {
   type        = string
   description = "The OpenHands Git repository URL to install."
@@ -83,6 +89,7 @@ resource "coder_script" "openhands_up" {
     _install_dir : var.install_dir,
     _checkout_url : var.git_repository_url,
     _checkout_branch : var.git_ref,
+    _workspace_dir : var.workspace_dir,
     _ingress_port : var.port,
     _pre_install_script = local.encoded_pre_install_script,
   })
