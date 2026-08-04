@@ -112,5 +112,3 @@ echo -e "👷 $${BOLD}[Re]starting OpenHands in background...\n\n"
 
 just serve --production --background --stop || true
 just serve --production --background --workspace_dir "$WORKSPACE_DIR" --ingress_port "$PORT" --fe_port "$((PORT + 1))" --be_port "$((PORT + 2))"
-
-echo -e "📝 $${BOLD}Check logs with\n$${RESET}\t pm2 logs prod-1"
