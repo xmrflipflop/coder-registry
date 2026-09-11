@@ -67,6 +67,7 @@ if [ -f "$HOME/.bash_profile" ]; then
 fi
 
 ensure_installed git
+ensure_installed tmux
 
 ensure_installed uv 'curl -LsSf https://astral.sh/uv/install.sh | sh'
 if ! command -v just &> /dev/null; then
